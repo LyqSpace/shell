@@ -143,17 +143,19 @@ int SHELL_launch(char **args) {
 				close(fd[0]);
 				dup2(fd[1],STDOUT_FILENO);
 				execvp(args1[0], args1);
+				exit(EXIT_FAILURE);
 			} else {
 				pid2 = fork();
 				if (pid2 == 0) {
 					close(fd[1]);
 					dup2(fd[0],STDIN_FILENO);
 					execvp(args2[0], args2);
+					exit(EXIT_FAILURE);
 				} else {
 					close(fd[0]);
 					close(fd[1]);
 					int status;
-					while (waitpid(-1, &status, WNOHANG) > 0);
+					while (wait(NULL) > 0);
 				}	
 			}
 			return 1;
